@@ -1,0 +1,4 @@
+
+venv*
+src/block_coding_tools/__pycache__*
+docs/_build*
