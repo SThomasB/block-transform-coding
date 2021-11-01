@@ -52,9 +52,20 @@ def traverse(f, x):
         return traverse(f, x)
     return x
 
+def _determine_compensation(i, grid):
+    # in order for the branches of the binary tree to draw over each other
+    # determine the offset needed to compensate
+    compensation = 0
+    for row in grid[i+1:]:
+        if np.any(row):
+            compensation += 1
+        else:
+            break
+    return compensation
+
 
 __syms = {0: " ", 2: "-", 3: '|'}
-def view_tree(tree, i=0, j=0, grid=np.zeros((100,100))):
+def view_tree(tree, i=0, j=0, grid=np.zeros((100,50))):
 
     node, tree = tree
     grid[i,j] = node
@@ -65,24 +76,32 @@ def view_tree(tree, i=0, j=0, grid=np.zeros((100,100))):
             grid = view_tree(left, i=i, j=j+4, grid=grid)
         else:
             grid[i, j+1:j+4] = 2
-            grid[i, j+5] = left
+            grid[i, j+4] = left
+
 
         if type(right)==tuple:
-            grid[i+1:i+3, j] = 3
-            grid[i+3, j:j+2] = 2
-            grid = view_tree(right, i=i+3, j=j+2, grid=grid)
+            i_step = _determine_compensation(i, grid)
+            j_step = j if not j else j+3
+            grid[i+1:(i+2+i_step), j_step] = 3
+            grid[i+2+i_step, j_step:j_step+3] = 2
+            grid = view_tree(right, i=i+2+i_step, j=j_step+3, grid=grid)
         else:
             grid[i+1, j+3] = 3
             grid[i+2, j+3] = right
+
     return grid
+
 
 def print_grid(grid):
     for row in grid:
-        print("")
+        if not np.any(row):
+            return
+        
         for col in row:
             if col in __syms.keys():
-                print(__syms[col], end="")
-            else: print(f'{col:.2f}', end="")
+                print(__syms[col], sep="", end="")
+            else: print(f'{col:.2f}', sep="", end="")
+        print("\n",end="")
 
 
 
