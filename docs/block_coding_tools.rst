@@ -37,6 +37,13 @@ block\_coding\_tools.evaluation module
 	:undoc-members:
 	:show-inheritance:
 
+block\_coding\_tools.encoding module
+------------------------------------
+
+.. automodule:: block_coding_tools.encoding
+	:members:
+	:undoc-members:
+	:show-inheritance:
 
 Module contents
 ---------------

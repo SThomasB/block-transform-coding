@@ -1,0 +1,14 @@
+The results are in db
+
+Result for dct:
+	 mean: 24.700
+	 standard deviation: 5.848
+Result for dst:
+	 mean: 22.262
+	 standard deviation: 4.676
+Result for haar:
+	 mean: 21.024
+	 standard deviation: 5.255
+Result for dwht:
+	 mean: 21.575
+	 standard deviation: 5.224

@@ -3,13 +3,9 @@ from typing import NamedTuple
 
 import numpy as np
 
-
-class Unknown:
-    pass
-
-class Results(NamedTuple):
-    pass
-
+class Result(NamedTuple):
+    mean:float
+    variance:float
 
 def histogram(x: np.array) -> list[tuple]:
     """ Return a list of tuples [(value, relative_frequency)]
@@ -69,7 +65,6 @@ def entropy(x: np.array, is_histogram=False) -> float:
         return entropy(x, is_histogram=True)
 
 
-
 def peak_signal_to_noise(x, y, data_range) -> float:
     """
 
@@ -102,3 +97,20 @@ def peak_signal_to_noise(x, y, data_range) -> float:
     """
     square_error = np.power(x-y,2)
     return 10*np.log10(data_range**2 / np.mean(square_error))
+
+
+def transform_coding_gain(coeff_vector: list[list]) -> float:
+    """
+            
+        Given a list of lists, this function computes the transform coding gain
+        as defined by:
+
+        .. math::
+
+            G_{TC} = \\frac{\\frac{1}{N}sum_{i=0}^{N-1}\sigma_i^2}{(\prod_i=0^{N-1})^{\\frac{1}{N}}} 
+
+    """
+
+    # The zeroth dimension (np.var(x, 0)) calculates the variance in each column
+    channel_variance = np.var(coeff_vector, 0) 
+    return 20*np.log10(np.mean(channel_variance)/np.prod(channel_variance)**(1/len(channel_variance)))
