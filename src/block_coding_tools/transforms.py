@@ -160,27 +160,16 @@ def dwht(N):
     return 1/np.sqrt(N) * np.array([x[i] for i,_ in sequency])
 
 
-#class Training:
-#    def __init__(self, transform, data_stream, description=""):
-#        self.transform = Training.__dict__[transform](data_stream)
-#        self.description = description
+def klt(data: str, reader):
+	stream = (reader(path) for path in data)
+	R = np.zeros_like(next(stream))
+	for n, block in enumerate(sream):
+		
+		R += np.outer(block, block)
+	
+	_, V = np.linalg.eigh(R)
+	return V
 
-
-#   def klt(data_stream):
-#        R = np.mean(
-#                list(np.mean(list(np.outer(x,x) for x in data),0) for data in data_stream),
-#                0
-#        )
-#        _, V = np.linalg.eigh(R)
-#        V = np.fliplr(V).T
-#        return V
-#    
-#    
-#    def write(self, path):
-#        with open(path, "wb") as fp:
-#            pickle.dump(self, fp)
-
-            
         
 
 

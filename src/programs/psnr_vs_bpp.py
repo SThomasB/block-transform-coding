@@ -32,6 +32,7 @@ def check_size_and_crop(img, block_size):
     dh = h%block_size
     dw = w%block_size
     return img[0:h-dh, 0:w-dw]
+
 if __name__=="__main__":
     _, transform, block_size, q, path_to_data, *options = sys.argv
     
@@ -56,8 +57,11 @@ if __name__=="__main__":
 
         coeffs = (U@block@U.T for block in blocks)
 
-        symbols = compose(image.shape, block_size, quantize(coeffs, q))
 
+        symbols = compose(image.shape, block_size, quantize(coeffs, q))
+        
+        print(len(np.unique(symbols)))
+        input()
         coder = encoding.Coder.from_histogram(
                 evaluation.histogram(symbols),
                 keep_histogram=True
@@ -66,23 +70,22 @@ if __name__=="__main__":
         
         
         print(coder)
+        print(evaluation.entropy(symbols)) 
         
-        
+        clamp=np.vectorize(lambda x: max(-0.5, min(x,0.5)))
 
         J = compose(
             image.shape,
             block_size,
             (U.T@(q*block)@U for block in decompose(symbols, block_size))
         )
-
-
-        J[J>0.5] = 0.5
-        J[J<-0.5] = -0.5
+        #
+        J = clamp(J)
+        #[J<-0.5] = -0.5
         psnr = evaluation.peak_signal_to_noise(image,J, 1)
         ski = ski_psnr(image,J, data_range=1)
         print(psnr)
         plt.imshow(J)
-        
         plt.show()
         code_length=0
         
